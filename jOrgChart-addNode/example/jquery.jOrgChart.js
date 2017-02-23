@@ -245,9 +245,9 @@
       {
         var $newNode = prompt("Enter new node");
         $("#demo").append('<li>' + $newNode + '</li>');
-        //$this.parent().addClass("creating");
-        //var $newNode = prompt("Enter new node");
-        //$(".creating").append('<li>' + $newNode + '</li>');
+        //$this.after("creating");
+        /*var $newNode = prompt("Enter new node");
+        $this.insert('<li>' + $newNode + '</li>');*/
         $(".jOrgChart").empty();
         $this.jOrgChart(opts);
       }

@@ -132,19 +132,11 @@
                                      .data("tree-node", nodeCount)
                                      .append($nodeContent);
      //hide specific node
-     var $visible = false;
+     //var $visible = false;
      $nodeDiv.click(function(){
-       if($hide == true)
+       if($hide == true && $childNodes.length == 0)
        {
-         if($(this).css('visibility') == 'visible' && $visible === true)
-         {
            $(this).css('visibility', 'hidden');
-           $visible = false;
-         }
-         else {
-           $(this).css('visibility', 'visible');
-           $visible = true;
-         }
        }
      });
 
