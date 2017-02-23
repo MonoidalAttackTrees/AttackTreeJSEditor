@@ -36,7 +36,8 @@
                 </ul>
                 <div class="pull-right">
                     <div class="alert-message info" id="show-list">Show underlying list.</div>
-                    <button onclick="rotate()">Rotate</button>
+                    <button onclick="Edit()">Edit</button>
+                    <button onclick="Hide()">Hide</button>
 
 <pre class="prettyprint lang-html" id="list-html" style="display:none"></pre>
                 </div>
@@ -45,41 +46,41 @@
     </div>
 
     <ul id="org" style="display:none">
-    <li class="text">
+    <li>
        Food
        <ul>
-         <li id="beer" class="text">Beer</li>
-         <li class="text">Vegetables
+         <li id="beer">Beer</li>
+         <li>Vegetables
            <a href="http://wesnolte.com" target="_blank">Click me</a>
            <ul>
-             <li class="text">Pumpkin</li>
-             <li class="text">
+             <li class="text" onclick="function()">Pumpkin</li>
+             <li>
                 <a href="http://tquila.com" target="_blank">Aubergine</a>
                 <p>A link and paragraph is all we need.</p>
              </li>
            </ul>
          </li>
-         <li class="text">Fruit
+         <li class="fruit">Fruit
            <ul>
-             <li class="text">Apple
+             <li>Apple
                <ul>
-                 <li class="text">Granny Smith</li>
+                 <li>Granny Smith</li>
                </ul>
              </li>
-             <li class="text">Berries
+             <li>Berries
                <ul>
-                 <li class="text">Blueberry</li>
-                 <li class="text"><img src="images/raspberry.jpg" alt="Raspberry"/></li>
-                 <li class="text">Cucumber</li>
+                 <li>Blueberry</li>
+                 <li><img src="images/raspberry.jpg" alt="Raspberry"/></li>
+                 <li>Cucumber</li>
                </ul>
              </li>
            </ul>
          </li>
-         <li class="text">Bread</li>
-         <li class="text">Chocolate
+         <li>Bread</li>
+         <li class="collapsed">Chocolate
            <ul>
-             <li class="text">Topdeck</li>
-             <li class="text">Reese's Cups</li>
+             <li>Topdeck</li>
+             <li>Reese's Cups</li>
            </ul>
          </li>
        </ul>
@@ -89,18 +90,30 @@
     <div id="chart" class="orgChart"></div>
 
     <script>
-    var $rotate = false;
-    function rotate(){
-      if($rotate == false)
+    //Edit node
+    var $edit = false;
+    function Edit(){
+      if($edit == true)
       {
-        $(".text").css("transform","rotate(90deg)");
-        $("#chart").css("transform","rotate(270deg) translateX(-25%)");
-        $rotate = true;
+        $edit = false;
       }
       else {
-        $(".text").css("transform","");
-        $("#chart").css("transform","");
-        $rotate = false;
+        $edit = true;
+        alert("Edit enabled!");
+      }
+
+      //alert($edit);
+    }
+    //Enable hide nodes
+    var $hide = false;
+    function Hide(){
+      if($hide == true)
+      {
+        $hide = false;
+      }
+      else{
+        $hide = true;
+        alert("Hide enabled!" + $hide);
       }
     }
         jQuery(document).ready(function() {
@@ -129,7 +142,10 @@
 
                 prettyPrint();
             });
+
         });
+
+
     </script>
 
 </body>
