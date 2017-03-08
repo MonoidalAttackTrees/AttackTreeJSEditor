@@ -457,19 +457,32 @@
         });
 
         $("#dialog").dialog({
+          height: 200,
+          width: 500,
+          modal: true,
+          resizable: true,
+          dialogClass: 'no-close dialog-dialog',
           autoOpen: false,
-          buttons: {
-            Ok: function(){
-              var nodeName = $("#name").val();
-              var nodeTitle = $("#title").val();
-              $("#upload-chart").append("<li id='" + nodeName + "' class='node child'><span class='label_node'><a>" + nodeName + "</a><br><i>" + nodeTitle + "</i></span><div class='details'><p><strong>rank:</strong>Manager</p><p><strong>department:</strong>IT</p></div></li>");
-              jOrgChart_init();
-              $(this).dialog("close");
+          buttons: [
+            {
+              text: "Add",
+              "class": 'addButtonClass',
+              click: function(){
+                  var nodeName = $("#name").val();
+                  var nodeTitle = $("#title").val();
+                  $("#upload-chart").append("<li id='" + nodeName + "' class='node child'><span class='label_node'><a>" + nodeName + "</a><br><i>" + nodeTitle + "</i></span><div class='details'><p><strong>rank:</strong>Manager</p><p><strong>department:</strong>IT</p></div></li>");
+                  jOrgChart_init();
+                  $(this).dialog("close");
+              }
             },
-            Cancel: function(){
-              $(this).dialog("close");
+            {
+              text: "Cancel",
+              "class": 'cancelButtonClass',
+              click: function(){
+                  $(this).dialog("close");
             }
           }
+          ]
         });
 
         $(".addNew").unbind().click(function(){

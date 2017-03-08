@@ -179,6 +179,33 @@ a:hover {
   margin-right: 0;
 }
 
+.addButtonClass,
+.cancelButtonClass {
+  margin: 5px;
+  width: 50px;
+}
+
+#dialog{
+  display: inline-block;
+}
+
+.ui-widget-content.dialog-dialog {
+    background: white;
+    right: 0;
+    left: 0;
+    margin: auto;
+    padding: 20px;
+    border: 3px solid red;
+    border-radius: 5px;
+    position: fixed;
+    top: 100px;
+}
+
+.ui-dialog-titlebar-close {
+    visibility: hidden;
+}
+
+
 .operator{
   display: inline-block;
   width: 20px;
