@@ -236,8 +236,8 @@
     //add node: remove previous chart and create a new one with the new nodes
     $("#add").unbind().click(function(){
         var $newNode = prompt("Enter new node");
-        $("#addnode").append("<li>" + $newNode + "</li>");
-        $("#addnode").jOrgChart(opts);
+        $(".demo").append("<li>" + $newNode + "</li>");
+        $(".demo").jOrgChart(opts);
 
     });
 
