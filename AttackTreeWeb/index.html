@@ -1,0 +1,495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+    <title>jOrgChart - A jQuery OrgChart Plugin</title>
+    <link rel="stylesheet" href="css/jquery.jOrgChart.css" />
+    <link rel="stylesheet" href="css/custom.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- jQuery includes -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script src="js/jquery.jOrgChart.js"></script>
+    <script language="Javascript" type="text/javascript" src="edit_area/edit_area_full.js"></script>
+    <script type="text/javascript" src="js/taffy.js"></script>
+    <style type="text/css">
+    #getjson {
+      display:block;
+      float: left;
+      width:auto;
+      height:30px;
+      border: 2px solid #f5f5f5;
+      border-radius: 50%;
+      color:#f5f5f5;
+      text-align:center;
+      text-decoration:none;
+      background: #464646;
+      box-shadow: 0 0 3px gray;
+      font-size:20px;
+      font-weight:bold;
+      margin-top: 30px;
+    }
+
+    ul#upload-chart {
+        font-size: 12px;
+        list-style: none outside none;
+        display: flex;
+    }
+
+    ul#upload-chart li {
+        background: none repeat scroll 0 0 white;
+        border: 1px solid black;
+        border-radius: 2px;
+        height: 60px;
+        margin-top: 10px;
+        padding-top: 5px;
+        text-align: center;
+        width: 180px;
+        z-index: 100;
+    }
+
+    #fancy_edit,
+    #fancy_add {
+        position: fixed;
+        top: 100px;
+        width: 500px;
+        background: #fff;
+        right: 0;
+        left: 0;
+        margin: auto;
+        padding: 20px;
+        border: 3px solid red;
+        border-radius: 5px;
+        z-index: 99999;
+    }
+
+    #fancy_edit i,
+    #fancy_add i {
+        position: absolute;
+        top: 0;
+        width: 15px;
+        height: 15px;
+        right: 0;
+        color: #000;
+        background: gray;
+        opacity: 1;
+        font-size: 15px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    </style>
+    <script>
+    var node_to_edit;
+
+    // read json and convert to html formate
+    // Here I am laod the json format to html structure. You no need to do this incase you have order list HTML in you body
+    //Start Load HTML
+    function loadjson() {
+        var items = [];
+        var data = TAFFY([
+
+            /*{
+                "id": 1,
+                "name": "Andrey",
+                "rank": "Manager",
+                "department": "Administration",
+                "level": "Systems and Network Manager",
+                "parent": ""
+            }, {
+                "id": 2,
+                "name": "Enrique",
+                "rank": "Vice President ",
+                "department": "IT",
+                "level": "IT and Networks Officer",
+                "parent": 1
+            }, {
+                "id": 3,
+                "name": "Chero",
+                "rank": "Staff",
+                "department": "Legal",
+                "level": "Principal Engineer, Electrical Machines",
+                "parent": 1
+            }, {
+                "id": 4,
+                "name": "Ricardo",
+                "rank": "Manager",
+                "department": "Marketing",
+                "level": "Senior Manager, IT Risk Management",
+                "parent": 3
+            }, {
+                "id": 5,
+                "name": "Jhon",
+                "rank": "CIO",
+                "department": "Operations",
+                "level": "Senior Vice President and Group President,",
+                "parent": 3
+            }, {
+                "id": 6,
+                "name": "William",
+                "rank": "Director",
+                "department": "Purchasing",
+                "level": "Systems Engineer",
+                "parent": 3
+            }, {
+                "id": 7,
+                "name": "Michile",
+                "rank": "Vice President",
+                "department": "Research and Development",
+                "level": "ICT Service Desk Manager",
+                "parent": 6
+            }*/
+            {
+                "id": 1,
+                "name": "",
+                "rank": "",
+                "department": "",
+                "level": "",
+                "parent": ""
+            }
+        ]);
+
+        data({
+            "parent": ""
+        }).each(function(record, recordnumber) {
+            loops(record);
+        });
+        //start loop the json and form the html
+        function loops(root) {
+            if (root.parent == "") {
+                items.push("<li class='unic" + root.id + " root' id='" + root.name + "'><span class='label_node'><a href=''>" + root.name + "</a></br><i>" + root.level + "</i></span><div class='details'><p><strong>rank:</strong>" + root.rank + "</p><p><strong>department:</strong>" + root.department + "</p></div>");
+            } else {
+                items.push("<li class='child unic" + root.id + "' id='" + root.name + "'><span class='label_node'><a href=''>" + root.name + "</a></br><i>" + root.level + "</i></span><div class='details'><p><strong>rank:</strong>" + root.rank + "</p><p><strong>department:</strong>" + root.department + "</p></div>");
+            }
+            var c = data({
+                "parent": root.id
+            }).count();
+            if (c != 0) {
+                items.push("<ul>");
+                data({
+                    "parent": root.id
+                }).each(function(record, recordnumber) {
+                    loops(record);
+                });
+                items.push("</ul></li>");
+            } else {
+                items.push("</li>");
+            }
+        } // End the generate html code
+
+        //push to html code
+        $("<ul/>", {
+            "id": "org",
+            "style": "float:right;",
+            html: items.join("")
+        }).appendTo("body");
+    }
+    // End Load HTML
+
+    //Text Editor
+    // initialisation
+    editAreaLoader.init({
+      id: "example_1"	// id of the textarea to transform
+      ,start_highlight: true	// if start with highlight
+      ,allow_resize: "both"
+      ,allow_toggle: false
+      ,word_wrap: true
+      ,language: "en"
+      ,syntax: "php"
+    });
+
+    // callback functions
+    function my_save(id, content){
+      alert("Here is the content of the EditArea '"+ id +"' as received by the save callback function:\n"+content);
+    }
+
+    function my_load(id){
+      editAreaLoader.setValue(id, "The content is loaded from the load_callback function into EditArea");
+    }
+
+    function test_setSelectionRange(id){
+      editAreaLoader.setSelectionRange(id, 100, 150);
+    }
+
+    function test_getSelectionRange(id){
+      var sel =editAreaLoader.getSelectionRange(id);
+      alert("start: "+sel["start"]+"\nend: "+sel["end"]);
+    }
+
+    function test_setSelectedText(id){
+      text= "[REPLACED SELECTION]";
+      editAreaLoader.setSelectedText(id, text);
+    }
+
+    function test_getSelectedText(id){
+      alert(editAreaLoader.getSelectedText(id));
+    }
+
+    function editAreaLoaded(id){
+      if(id=="example_2")
+      {
+        open_file1();
+        open_file2();
+      }
+    }
+
+    function open_file1()
+    {
+      var new_file= {id: "to\\ é # € to", text: "$authors= array();\n$news= array();", syntax: 'php', title: 'beautiful title'};
+      editAreaLoader.openFile('example_2', new_file);
+    }
+
+    function open_file2()
+    {
+      var new_file= {id: "Filename", text: "<a href=\"toto\">\n\tbouh\n</a>\n<!-- it's a comment -->", syntax: 'html'};
+      editAreaLoader.openFile('example_2', new_file);
+    }
+
+    function close_file1()
+    {
+      editAreaLoader.closeFile('example_2', "to\\ é # € to");
+    }
+
+    function toogle_editable(id)
+    {
+      editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
+    }
+
+    </script>
+</head>
+
+<body>
+  <div id="wrapper">
+  <nav>
+      <ul>
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+  </nav>
+  <main>
+
+    <div class="tabordion">
+      <section id="section1">
+        <input type="radio" name="sections" id="option1" checked>
+        <label for="option1">G</label>
+        <article>
+          <button id="getjson" class="addNew">+</button>
+          <div id="in" style="display:none">
+          </div>
+          <!-- Here below code for Right side box model. Please dont change ID -->
+          <ul id="upload-chart">
+              <li id="Albert" class="node child"><span class="label_node"><a>Albert</a><br><i>Data Architect</i> </span>
+                  <div class="details">
+                      <p><strong>rank:</strong>Vice President</p>
+                      <p><strong>department:</strong>Research and Development</p>
+                  </div>
+              </li>
+              <li id="Moser" class="node child"><span class="label_node"><a>Moser</a><br><i>technical engineer </i></span>
+                  <div class="details">
+                      <p><strong>rank:</strong>Manager</p>
+                      <p><strong>department:</strong>IT</p>
+                  </div>
+              </li>
+              <li id="Meinert" class="node child"><span class="label_node"><a>Meinert</a><br><i>Maintenance Service Engineer</i></span>
+                  <div class="details">
+                      <p><strong>rank:</strong>Vice President</p>
+                      <p><strong>department:</strong>Research and Development</p>
+                  </div>
+              </li>
+              <li id="Mic" class="node child"><span class="label_node"><a>Mic</a><br><i>Chairman of the Board, President</i></span>
+                  <div class="details">
+                      <p><strong>rank:</strong>Manager</p>
+                      <p><strong>department:</strong>IT</p>
+                  </div>
+              </li>
+          </ul>
+          <div id="chart" class="orgChart"></div>
+          <!-- Make sure You add this below code to you HTML in case you want edit and add box -->
+          <!-- Add Node box -->
+          <div id="fancy_add" class="hidden">
+              <form>
+                  <h1 class="title_lb">New Node</h1>
+                  <div class="span12" id="add_nodo">
+                      <p class="notice span3">
+                          Enter node caption
+                      </p>
+                      <input type="text" name="node_name" id="new_node_name" />
+                      <input type="text" name="title_name" id="new_node_title" />
+                      <div class="span12">
+                          <button id="add_node" class="aqua_btn span3">Add</button>
+                      </div>
+                  </div>
+              </form>
+              <i class="close">X</i>
+          </div>
+          <!-- Edit node box -->
+          <div id="fancy_edit" class="hidden">
+              <form>
+                  <h1 class="title_lb">Edit Node</h1>
+                  <div class="span12" id="edit_nodo">
+                      <p class="notice span3">
+                          Enter node caption
+                      </p>
+                      <input type="text" name="node_name" id="edit_node_name" />
+                      <input type="text" name="node_title" id="edit_node_title" />
+                      <div class="span12">
+                          <button id="edit_node" class="aqua_btn span3">Edit</button>
+                      </div>
+                  </div>
+              </form>
+              <i class="close">X</i>
+          </div>
+          <!-- Add node list -->
+          <div id="dialog">
+              <h1 class="title_lb">New Node</h1>
+              <div class="span12">
+                <input type="text" id="name"></input>
+                <input type="text" id="title"></input>
+              </div>
+          </div>
+
+        </article>
+      </section>
+      <section id="section2">
+        <input type="radio" name="sections" id="option2">
+        <label for="option2">E</label>
+        <article>
+
+          <form action='' method='post'>
+          		<textarea id="example_1" style="height: 350px; width: 100%;" name="test_1">
+          <?php
+          	$authors	= array();
+          	$news		= array();
+          	/* this is a long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long comment for showing word-wrap feature */
+          	$query	= "SELECT author, COUNT(id) as 'nb_news' FROM news_messages GROUP BY author";
+          	$result	= mysql_query($query, $DBnews);
+          	while( $line = mysql_fetch_assoc($result) ){
+          		$authors[$line["author"]]	= $line["author"];
+          		$news[$line["author"]]		= $line['nb_news'];
+          	}
+
+          	$list= sprintf("('%s')", implode("', '", $authors));
+
+
+          	$query="SELECT p.people_id, p.name, p.fname, p.status, team_name, t.leader_id=p.people_id as 'team_leader', w.name as 'wp_name', w.type
+          			FROM people p, teams t, wppartis wp, wps w
+          			WHERE p.people_id IN $list AND p.org_id=t.team_id AND wp.team_id=t.team_id AND wp.wp_id=w.wp_id
+          			GROUP BY p.people_id";
+          	if(isset($_GET["order"]) && $_GET["order"]!="nb_news")
+          		$query.=" ORDER BY ".$_GET["order"];
+
+          	$result=mysql_query($query, $DBkal);
+          	while($line = mysql_fetch_assoc($result)){
+          		printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", $line["name"], $line["fname"],
+          			$news[$line["people_id"]], $line["status"], $line["team_name"], ($line["team_leader"]=="1")?"yes":"no", $line["type"], $line["wp_name"]);
+
+          	}
+          	printf("</table>");
+          ?>
+          		</textarea>
+          </form>
+
+        </article>
+      </section>
+    </div>
+  </div>
+
+
+</main>
+
+    <script type="text/javascript">
+    function init_tree() {
+        var opts = {
+            chartElement: '#chart',
+            dragAndDrop: true,
+            expand: true,
+            control: true,
+            rowcolor: false
+        };
+        $("#chart").html("");
+        $("#org").jOrgChart(opts);
+    }
+
+    function scroll() {
+        $(".node").click(function() {
+            $("#chart").scrollTop(0)
+            $("#chart").scrollTop($(this).offset().top - 140);
+        })
+    }
+
+
+
+    function makeArrays() {
+        var hierarchy = [];
+
+        $("#org li").each(function() {
+            var uid = $(this).attr("id");
+            var name = $(this).find(">:first-child a").text();
+            var hidSTR = "";
+            var hid = $(this).parents("li");
+            if (hid.length == 0) //If this object is the root user, substitute id with "orgName" so the DB knows it's the name of organization and not a user
+            {
+                hidSTR = "orgName";
+                var user = new Object();
+                user.key = name;
+                user.hierarchy = hidSTR;
+                hierarchy.push(user);
+            } else {
+                for (var i = hid.length - 1; i >= 0; i--) {
+                    if (i != hid.length - 1) {
+                        hidSTR = hidSTR + hid[i].id + ",";
+                    } else {
+                        hidSTR = hidSTR + hid[i].id + '"';
+                    }
+                }
+                var user = new Object();
+                user.key = name;
+                user.hierarchy = hidSTR;
+                hierarchy.push(user);
+            }
+        });
+        console.log(hierarchy)
+        alert("Check console")
+    }
+
+
+
+    $(document).ready(function() {
+        loadjson();
+        init_tree();
+
+        //forms behavior
+        $("#new_node_name, #edit_node_name").on("keyup", function(evt) {
+            var id = $(this).attr("id");
+            if ($(this).val() != '') {
+                if (id == "new_node_name") {
+                    $("#add_node").show();
+                } else {
+                    $("#edit_node").show();
+                }
+            } else {
+                if (id == "new_node_name") {
+                    $("#add_node").hide();
+                } else {
+                    $("#edit_node").hide();
+                }
+            }
+        });
+
+        scroll()
+
+
+
+    });
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
