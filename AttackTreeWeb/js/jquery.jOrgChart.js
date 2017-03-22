@@ -114,7 +114,7 @@
                 }
 
                 //remove list from side bar when added to org-chart
-                if (removeside_node != "") {
+                if (removeside_node != "" && remove == true) {
                     $("#upload-chart #" + removeside_node).remove();
                     removeside_node = "";
                 }
@@ -128,6 +128,7 @@
 
             // Drop event handler for nodes
             var removeside_node = ""
+            var remove = true;
             $divNode.bind("drop", function handleDropEvent(event, ui) {
 
                 var targetID = $(this).data("tree-node");
@@ -156,9 +157,14 @@
 
                 sourceLi.removeClass("node").removeClass("ui-draggable")
 
-                if (targetUl.length > 0) {
+                if (targetUl.length > 0 && targetUl.children().length < 2) {
                     targetUl.append(sourceLi);
-                } else {
+                }
+                else if (targetUl.children().length == 2){
+                  alert("already has two children");
+                  remove = false;
+                }
+                else {
                     targetLi.append("<ul></ul>");
                     targetLi.children('ul').append(sourceLi);
                 }
@@ -220,34 +226,35 @@
         //Increaments the node count which is used to link the source list and the org chart
         nodeCount++;
 
-        $node.data("tree-node", nodeCount);
-        $nodeDiv = $("<div>").addClass("node")
-            .data("tree-node", nodeCount)
-            .append($nodeContent);
+          $node.data("tree-node", nodeCount);
+           $nodeDiv = $("<div>").addClass("node")
+               .data("tree-node", nodeCount)
+               .append($nodeContent);
+
+           $nodeDiv.append(
+                   "<div class='opciones'>" +
+                   "</div>")
+               .mouseenter(function() {
+                   if ($(this).find("> .details > span").length == 0) {
+                       var duplicate = $(this).find("> span.label_node").clone();
+                       $(this).find("> .details").prepend(duplicate);
+                   }
+                   $(this).find(".details").toggle().parent().css("z-index", "999");
+               }).mouseleave(function() {
+                   $(this).find(".details").toggle().parent().removeAttr("style");
+               });
+
+           $nodeDiv.append(
+                       "<div class='opciones1'>" +
+                       "</div>");
+
+           var append_text = "<li class='temp'></li>";
+           var $list_element = $node.clone()
+               .children("ul,li")
+               .remove()
+               .end();
 
 
-        $nodeDiv.append(
-                "<div class='opciones'>" +
-                "</div>")
-            .mouseenter(function() {
-                if ($(this).find("> .details > span").length == 0) {
-                    var duplicate = $(this).find("> span.label_node").clone();
-                    $(this).find("> .details").prepend(duplicate);
-                }
-                $(this).find(".details").toggle().parent().css("z-index", "999");
-            }).mouseleave(function() {
-                $(this).find(".details").toggle().parent().removeAttr("style");
-            });
-
-        $nodeDiv.append(
-                    "<div class='opciones1'>" +
-                    "</div>");
-
-        var append_text = "<li class='temp'></li>";
-        var $list_element = $node.clone()
-            .children("ul,li")
-            .remove()
-            .end();
 
 
         // Expand and contract nodes
@@ -418,6 +425,8 @@
         //Add Node
 
         $(jOrgChart_user_config_options.chartElement).find(".add").off("click").on("click", function() {
+          if($childNodes < 2)
+          {
             $("#fancy_add i").show();
             var classList = $(this).parent().parent().attr('class').split(/\s+/);
             var add_to_node;
@@ -454,6 +463,11 @@
                 jOrgChart_init();
             });
             $("#fancy_add").show();
+          }
+          else {
+            alert("This parent already has two children");
+          }
+
         });
 
         $("#dialog").dialog({
