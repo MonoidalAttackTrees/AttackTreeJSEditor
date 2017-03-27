@@ -12,6 +12,8 @@ Installing GHCJS on GHC 8.0.1
 
   It is easiest to use [homebrew](https://brew.sh/) to install these programs.
 
+- Install [node.js](https://nodejs.org/en/download/).
+
 - Inside the ghcjs repo run the following to install it: ``cabal install .``
 
 - Now bootstrap GHCJS using the following command inside the ghcjs repo:
