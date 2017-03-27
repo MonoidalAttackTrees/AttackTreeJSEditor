@@ -4,7 +4,7 @@ An editor for building attack trees written in Javascript.
 Installing GHCJS on GHC 8.0.1
 -----------------------------
 
-- Clone the GHCJS repo: ``git@github.com:ghcjs/ghcjs.git``
+- Clone the GHCJS repo: ``git clone git@github.com:ghcjs/ghcjs.git``
 
 - Checkout the ``ghc-8.0`` branch.
 
