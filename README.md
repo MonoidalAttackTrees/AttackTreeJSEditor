@@ -17,4 +17,4 @@ Installing GHCJS on GHC 8.0.1
 
   ``ghcjs-boot --dev --ghcjs-boot-dev-branch ghc-8.0 --shims-dev-branch ghc-8.0``
 
-Warning: the previous command builds *all* of ghcjs.  Make sure you have plenty of time before running.
+  Warning: the previous command builds *all* of ghcjs.  Make sure you have plenty of time before running.
