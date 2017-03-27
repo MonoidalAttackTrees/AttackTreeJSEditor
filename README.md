@@ -9,6 +9,7 @@ Installing GHCJS on GHC 8.0.1
 - Checkout the ``ghc-8.0`` branch: ``git checkout ghc-8.0``
 
 - These programs must be installed: autoconf and automake
+
   It is easiest to use [homebrew](https://brew.sh/) to install these programs.
 
 - Inside the ghcjs repo run the following to install it: ``cabal install .``
