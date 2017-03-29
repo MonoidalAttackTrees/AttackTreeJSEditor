@@ -14,10 +14,12 @@ Installing GHCJS on Mac OS X with GHC 8.0.1
 
 - Install [node.js](https://nodejs.org/en/download/).
 
+  Note: Use the offical download from the node js website instead of brew, because the version in brew is old.
+
 - Inside the ghcjs repo run the following to install it: ``cabal install .``
 
 - Now bootstrap GHCJS using the following command inside the ghcjs repo:
 
   ``ghcjs-boot --dev --ghcjs-boot-dev-branch ghc-8.0 --shims-dev-branch ghc-8.0``
 
-  Warning: the previous command builds *all* of the ghcjs libraries.  Make sure you have plenty of time before running.
+  Warning: the previous command builds *all* of the ghcjs libraries.  Make sure you have plenty of time before running it.
