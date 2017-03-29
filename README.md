@@ -14,7 +14,7 @@ Installing GHCJS on Mac OS X (10.11.6 - 10.12.01) with GHC 8.0.1
 
 - Install [node.js](https://nodejs.org/en/download/).
 
-  Note: Use the offical download from the node js website instead of brew, because the version in brew is old.
+  Note: Use the offical download from the node js website instead of homebrew, because the version in brew is old.
 
 - Inside the ghcjs repo run the following to install it: ``cabal install .``
 
